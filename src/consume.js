@@ -16,7 +16,7 @@ console.log("Creating ConsumerGroup");
 const consumer = new ConsumerGroup({
     host,
     groupId,
-    sessionTimeout: 2000,
+    sessionTimeout: 15000,
     protocol: ['roundrobin'],
 }, topic);
 

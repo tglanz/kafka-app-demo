@@ -13,7 +13,7 @@ console.log("Received options:\n", {
 });
 
 console.log("Creating ConsumerGroup");
-const consumerGroup = new ConsumerGroup({
+const consumer = new ConsumerGroup({
     host,
     groupId,
     sessionTimeout: 2000,
@@ -27,14 +27,12 @@ try {
     })
 
     console.log("Registering message event");
-    consumerGroup.on('message', message => {
+    consumer.on('message', message => {
         console.log("Event.message", message);
     })
 
     console.log("Attempting to connect");
-    consumerGroup.connect();
-
-    
+    consumer.connect();
 } catch (error){
     console.error("Unknown error", error);
 }

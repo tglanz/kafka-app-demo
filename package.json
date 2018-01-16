@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "consume": "node src/consume",
+    "produce": "node src/produce",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -3,15 +3,9 @@ const { Client, HighLevelProducer, } = require('kafka-node');
 const {
     host,
     topic,
-    message
+    message,
+    showMetadata = false
 } = require('minimist')(process.argv.slice(2));
-
-const questionAsync = async question => new Promise((resolve, reject) => {
-    rl.question(question, answer => {
-        rl.close();
-        resolve(answer);
-    });
-});
 
 console.log(`Creating client for host: ${host}`);
 const client = new Client(host);
@@ -23,20 +17,24 @@ producer.on('error', error => {
     console.log("Event.error", error);
 });
 
-producer.on('ready', readyRes => {
-    console.log("Producer is now ready", { readyRes });
+producer.on('ready', () => {
+
+    if (showMetadata){
+        client.loadMetadataForTopics([topic], (errr, result) => {
+            console.log(`Loaded metadata for topic ${topic}`, result[1].metadata[topic]);
+        });
+    }
+
+    console.log("Producer is now ready");
 
     // see payload model at: https://www.npmjs.com/package/kafka-node#highlevelproducer
     producer.send([{
         topic,
         messages: message // can be an array                    
-    }], sendRes => {
-        console.log("Sent", { sendRes });
-
+    }], (error, data) => {
+        console.log("Sent", { error, data });
         console.log("Closing client connection");
-        client.close(closeRes => {
-            console.log("Closed", { closeRes });
-        });
+        client.close(() => console.log("Closed"));
     });
 });
     

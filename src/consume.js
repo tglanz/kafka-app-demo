@@ -18,6 +18,7 @@ const consumer = new ConsumerGroup({
     groupId,
     sessionTimeout: 15000,
     protocol: ['roundrobin'],
+    fromOffset: 'latest'
 }, topic);
 
 try {
@@ -30,9 +31,6 @@ try {
     consumer.on('message', message => {
         console.log("Event.message", message);
     })
-
-    console.log("Attempting to connect");
-    consumer.connect();
 } catch (error){
     console.error("Unknown error", error);
 }

@@ -18,7 +18,8 @@ const consumer = new ConsumerGroup({
     groupId,
     sessionTimeout: 15000,
     protocol: ['roundrobin'],
-    fromOffset: 'latest'
+    fromOffset: 'latest',
+    autoCommit: false
 }, topic);
 
 try {
@@ -30,6 +31,12 @@ try {
     console.log("Registering message event");
     consumer.on('message', message => {
         console.log("Event.message", message);
+
+        setTimeout(() => {
+            consumer.commit((error, data) => {
+                console.log("Committed", { data, error });
+            });
+        }, 0);
     })
 } catch (error){
     console.error("Unknown error", error);
